@@ -2,6 +2,8 @@ package com.peluqueria.ms_autenticacion_usuario.controller;
 
 import com.peluqueria.ms_autenticacion_usuario.model.Rol;
 import com.peluqueria.ms_autenticacion_usuario.service.RolService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,16 +15,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/roles")
+@Tag(name = "Roles", description = "Operaciones relacionadas con los roles de MS Peluqueria")
 public class RolController {
 
     @Autowired
     private RolService rolService;
 
+    @Operation(summary = "Obtiene todos los detalles de los roles")
     @GetMapping
     public ResponseEntity<List<Rol>> getRoles() {
         return new ResponseEntity<>(rolService.getRoles(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtiene todos los detalles de un rol mediante su ID")
     @GetMapping("/{id}")
     public ResponseEntity<Rol> getRol(@PathVariable Integer id) {
         Optional<Rol> rolOpt = rolService.getRol(id);
@@ -33,11 +38,13 @@ public class RolController {
         }
     }
 
+    @Operation(summary = "Agrega un nuevo rol")
     @PostMapping
     public ResponseEntity<Rol> saveRol(@Valid @RequestBody Rol rolUsuario) {
         return new ResponseEntity<>(rolService.saveRol(rolUsuario), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Modifica un rol existente mediante su ID")
     @PutMapping("/{id}")
     public ResponseEntity<Rol> updateRol(@PathVariable Integer id, @Valid @RequestBody Rol rolUsuario) {
         Optional<Rol> rolExistente = rolService.getRol(id);
@@ -49,6 +56,7 @@ public class RolController {
         }
     }
 
+    @Operation(summary = "Elimina un rol existente mediante su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRol(@PathVariable Integer id) {
         Optional<Rol> rolExistente = rolService.getRol(id);

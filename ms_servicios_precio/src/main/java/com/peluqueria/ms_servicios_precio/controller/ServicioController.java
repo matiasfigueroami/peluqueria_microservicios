@@ -2,6 +2,8 @@ package com.peluqueria.ms_servicios_precio.controller;
 
 import com.peluqueria.ms_servicios_precio.model.Servicio;
 import com.peluqueria.ms_servicios_precio.service.ServicioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,16 +15,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/servicios")
+@Tag(name = "Servicios", description = "Operaciones relacionadas con los servicios de MS Peluqueria")
 public class ServicioController {
 
     @Autowired
     private ServicioService servicioService;
 
+    @Operation(summary = "Obtiene todos los detalles de los servicios")
     @GetMapping
     public ResponseEntity<List<Servicio>> getServicios() {
         return new ResponseEntity<>(servicioService.getServicios(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtiene todos los detalles de un servicio mediante su ID")
     @GetMapping("/{id}")
     public ResponseEntity<Servicio> getServicio(@PathVariable Integer id) {
         Optional<Servicio> servicioOpt = servicioService.getServicio(id);
@@ -33,11 +38,13 @@ public class ServicioController {
         }
     }
 
+    @Operation(summary = "Agrega un nuevo servicio")
     @PostMapping
     public ResponseEntity<Servicio> saveServicio(@Valid @RequestBody Servicio servicio) {
         return new ResponseEntity<>(servicioService.saveServicio(servicio), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Modifica un servicio existente mediante su ID")
     @PutMapping("/{id}")
     public ResponseEntity<Servicio> updateServicio(@PathVariable Integer id,
                                                    @Valid @RequestBody Servicio servicio) {
@@ -50,6 +57,7 @@ public class ServicioController {
         }
     }
 
+    @Operation(summary = "Elimina un servicio existente mediante su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteServicio(@PathVariable Integer id) {
         Optional<Servicio> servicioExistente = servicioService.getServicio(id);

@@ -4,6 +4,8 @@ import com.peluqueria.ms_peluqueros_staff.dto.EmpleadoEspecialidadDTO;
 import com.peluqueria.ms_peluqueros_staff.dto.EmpleadoUsuarioDTO;
 import com.peluqueria.ms_peluqueros_staff.model.Empleado;
 import com.peluqueria.ms_peluqueros_staff.service.EmpleadoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,18 +17,21 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/empleados")
+@Tag(name = "Empleados", description = "Operaciones relacionadas con los empleados de MS Peluqueria")
 public class EmpleadoController {
 
     @Autowired
     private EmpleadoService empleadoService;
 
     // 200 OK
+    @Operation(summary = "Obtiene todos los detalles de los empleados")
     @GetMapping
     public ResponseEntity<List<Empleado>> getEmpleados() {
         return ResponseEntity.ok(empleadoService.getEmpleados());
     }
 
     // 200 OK o 404 NOT FOUND
+    @Operation(summary = "Obtiene todos los detalles de un empleado mediante su ID")
     @GetMapping("/{id}")
     public ResponseEntity<Empleado> getEmpleado(@PathVariable Integer id) {
         Optional<Empleado> empleadoOpt = empleadoService.getEmpleado(id);
@@ -39,6 +44,7 @@ public class EmpleadoController {
     }
 
     // 201 CREATED (Se agrega @Valid para validar el body)
+    @Operation(summary = "Agrega un nuevo empleado")
     @PostMapping
     public ResponseEntity<Empleado> saveEmpleado(@Valid @RequestBody Empleado empleado) {
         Empleado empleadoGuardado = empleadoService.saveEmpleado(empleado);
@@ -46,6 +52,7 @@ public class EmpleadoController {
     }
 
     // 200 OK o 404 NOT FOUND (Se agrega @Valid)
+    @Operation(summary = "Modifica un empleado mediante su ID")
     @PutMapping("/{id}")
     public ResponseEntity<Empleado> updateEmpleado(@PathVariable Integer id, @Valid @RequestBody Empleado empleado) {
         Optional<Empleado> empleadoExistente = empleadoService.getEmpleado(id);
@@ -60,6 +67,7 @@ public class EmpleadoController {
     }
 
     // 200 OK o 404 NOT FOUND
+    @Operation(summary = "Elimina un empleado mediante su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmpleado(@PathVariable Integer id) {
         Optional<Empleado> empleadoExistente = empleadoService.getEmpleado(id);
@@ -73,6 +81,7 @@ public class EmpleadoController {
     }
 
     // 200 OK o 404 NOT FOUND (Agregué validación de nulidad por precaución)
+    @Operation(summary = "Obtiene todos los detalles de un empleado con su usuario")
     @GetMapping("/usuarios")
     public ResponseEntity<EmpleadoUsuarioDTO> getEmpleadoConUsuario() {
         EmpleadoUsuarioDTO dto = empleadoService.getEmpleadoConUsuario();
@@ -85,6 +94,7 @@ public class EmpleadoController {
     }
 
     // 200 OK o 404 NOT FOUND (Agregué validación de nulidad por precaución)
+    @Operation(summary = "Obtiene todos los detalles de un empleado con su especialidad")
     @GetMapping("/especialidades")
     public ResponseEntity<EmpleadoEspecialidadDTO> getEmpleadoConEspecialidad() {
         EmpleadoEspecialidadDTO dto = empleadoService.getEmpleadoConEspecialidad();

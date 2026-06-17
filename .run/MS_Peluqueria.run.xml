@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MS_Peluqueria" type="CompoundRunConfigurationType">
+    <toRun name="MS_Agenda_Cita" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

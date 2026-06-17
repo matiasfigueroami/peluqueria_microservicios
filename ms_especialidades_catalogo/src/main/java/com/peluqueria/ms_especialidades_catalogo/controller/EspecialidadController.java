@@ -2,6 +2,8 @@ package com.peluqueria.ms_especialidades_catalogo.controller;
 
 import com.peluqueria.ms_especialidades_catalogo.model.Especialidad;
 import com.peluqueria.ms_especialidades_catalogo.service.EspecialidadService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,16 +15,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/especialidades")
+@Tag(name = "Especialidades", description = "Operaciones relacionadas con las especialidades de MS Peluqueria")
 public class EspecialidadController {
 
     @Autowired
     private EspecialidadService especialidadService;
 
+    @Operation(summary = "Obtiene todos los detalles de las especialidades")
     @GetMapping
     public ResponseEntity<List<Especialidad>> getEspecialidades() {
         return new ResponseEntity<>(especialidadService.getEspecialidades(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtiene todos los detalles de una especialidad")
     @GetMapping("/{id}")
     public ResponseEntity<Especialidad> getEspecialidad(@PathVariable Integer id) {
         Optional<Especialidad> especialidadOpt = especialidadService.getEspecialidad(id);
@@ -33,11 +38,13 @@ public class EspecialidadController {
         }
     }
 
+    @Operation(summary = "Agrega una nueva especialidad")
     @PostMapping
     public ResponseEntity<Especialidad> saveEspecialidad(@Valid @RequestBody Especialidad especialidad) {
         return new ResponseEntity<>(especialidadService.saveEspecialidad(especialidad), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Modifica una especialidad existente mediante su ID")
     @PutMapping("/{id}")
     public ResponseEntity<Especialidad> updateEspecialidad(@PathVariable Integer id,
                                                            @Valid @RequestBody Especialidad especialidad) {
@@ -50,6 +57,7 @@ public class EspecialidadController {
         }
     }
 
+    @Operation(summary = "Elimina una especialidad existente mediante su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEspecialidad(@PathVariable Integer id) {
         Optional<Especialidad> especialidadExistente = especialidadService.getEspecialidad(id);

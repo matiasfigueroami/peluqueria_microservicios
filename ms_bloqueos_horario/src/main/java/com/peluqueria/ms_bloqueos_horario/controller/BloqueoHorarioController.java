@@ -3,6 +3,8 @@ package com.peluqueria.ms_bloqueos_horario.controller;
 import com.peluqueria.ms_bloqueos_horario.dto.BloqueoHorarioEmpleadoDTO;
 import com.peluqueria.ms_bloqueos_horario.model.BloqueoHorario;
 import com.peluqueria.ms_bloqueos_horario.service.BloqueoHorarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,16 +16,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/bloqueoHorarios")
+@Tag(name = "Bloqueo Horarios", description = "Operaciones relacionadas con los bloqueos de horarios de MS Peluqueria")
 public class BloqueoHorarioController {
 
     @Autowired
     private BloqueoHorarioService bloqueoHorarioService;
 
+    @Operation(summary = "Obtiene todos los detalles de los horarios")
     @GetMapping
-    public ResponseEntity<List<BloqueoHorario>> getBloqueoHorario() {
+    public ResponseEntity<List<BloqueoHorario>> getBloqueoHorarios() {
         return new ResponseEntity<>(bloqueoHorarioService.getBloqueoHorario(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtiene todos los detalles de un horario mediante su ID")
     @GetMapping("/{id}")
     public ResponseEntity<BloqueoHorario> getBloqueoHorario(@PathVariable Integer id) {
         Optional<BloqueoHorario> bloqueoOpt = bloqueoHorarioService.getBloqueoHorario(id);
@@ -34,6 +39,7 @@ public class BloqueoHorarioController {
         }
     }
 
+    @Operation(summary = "Agrega un nuevo bloqueo horario")
     @PostMapping
     public ResponseEntity<?> saveBloqueoHorario(@RequestBody BloqueoHorario bloqueoHorario) {
         try {
@@ -44,6 +50,7 @@ public class BloqueoHorarioController {
         }
     }
 
+    @Operation(summary = "Modificas un bloqueo horario existente mediante su ID")
     @PutMapping("/{id}")
     public ResponseEntity<BloqueoHorario> updateBloqueoHorario(@PathVariable Integer id,
                                                                @Valid @RequestBody BloqueoHorario bloqueoHorario) {
@@ -56,6 +63,7 @@ public class BloqueoHorarioController {
         }
     }
 
+    @Operation(summary = "Elimina un bloqueo horario existente mediante su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBloqueoHorario(@PathVariable Integer id) {
         Optional<BloqueoHorario> bloqueoExistente = bloqueoHorarioService.getBloqueoHorario(id);
@@ -67,6 +75,7 @@ public class BloqueoHorarioController {
         }
     }
 
+    @Operation(summary = "Obtiene todos los detalles un bloqueo horario con el empleado asignado")
     @GetMapping("/empleados")
     public ResponseEntity<BloqueoHorarioEmpleadoDTO> getBloqueoHorarioConEmpleado() {
         return new ResponseEntity<>(bloqueoHorarioService.getBloqueoHorarioConEmpleado(), HttpStatus.OK);
