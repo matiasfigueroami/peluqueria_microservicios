@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: resenas
+            uri: http://localhost:8091
+            predicates:
+              - Path=/api/v1/resenas/**
+
+          - id: clientes
+            uri: http://localhost:8084
+            predicates:
+              - Path=/api/v1/clientes/**
+
+          - id: notificaciones
+            uri: http://localhost:8086
+            predicates:
+              - Path=/api/v1/notificaciones/**
+
+          - id: bloqueoHorarios
+            uri: http://localhost:8089
+            predicates:
+              - Path=/api/v1/bloqueoHorarios/**

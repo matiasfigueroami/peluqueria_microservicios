@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS especialidad (
+    id_especialidad INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
