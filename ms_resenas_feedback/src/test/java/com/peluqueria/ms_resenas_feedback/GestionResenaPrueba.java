@@ -2,31 +2,40 @@ package com.peluqueria.ms_resenas_feedback;
 
 import com.peluqueria.ms_resenas_feedback.model.Resena;
 import net.datafaker.Faker;
+import org.hibernate.validator.internal.util.Contracts;
 import org.junit.jupiter.api.Test;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class MsResenasFeedbackPrueba {
+public class GestionResenaPrueba {
 
     @Test
     void registrarResena(){
-
-        // Arrange (Preparar)
         Faker faker = new Faker();
         Resena resena = new Resena();
 
-        resena.setEstrella(faker.number().numberBetween(1,6));
         resena.setComentario(faker.lorem().sentence());
+        resena.setComentario("Excelente atención");
         resena.setEstrella(5);
 
-        // Act (Ejecutar)
-
-        // Asseert (Verificar)
         System.out.println(resena);
 
         assertNotNull(resena);
         assertNotNull(resena.getComentario());
+        assertEquals("Excelente atención", resena.getComentario());
         assertEquals(5, resena.getEstrella());
     }
+
+    @Test
+    void actualizarResena(){
+        Resena resena = new Resena();
+        resena.setEstrella(5);
+
+        resena.setEstrella(3);
+
+        assertNotNull(resena);
+        assertEquals(3, resena.getEstrella());
+    }
+
 }
