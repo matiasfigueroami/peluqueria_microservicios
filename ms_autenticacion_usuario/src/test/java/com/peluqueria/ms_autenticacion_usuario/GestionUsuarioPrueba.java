@@ -17,7 +17,8 @@ public class GestionUsuarioPrueba {
     void registrarUsuario() {
         Usuario usuario = new Usuario();
         String emailGenerado = faker.internet().emailAddress();
-        String passwordGenerado = faker.internet().password(8, 16, true, true, true);
+        String passwordGenerado;
+        passwordGenerado = faker.internet().password(8, 16, true, true, true);
 
         usuario.setEmail(emailGenerado);
         usuario.setPassword(passwordGenerado);
