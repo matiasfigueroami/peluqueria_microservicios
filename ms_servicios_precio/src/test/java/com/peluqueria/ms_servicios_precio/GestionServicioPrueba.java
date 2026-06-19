@@ -9,30 +9,34 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GestionServicioPrueba {
 
+    private final Faker faker = new Faker();
+
     @Test
     void registrarServicio(){
-        Faker faker = new Faker();
         Servicio servicio = new Servicio();
+        String nombreGenerado = faker.commerce().productName();
+        int precioGenerado = faker.number().numberBetween(3000, 30000);
 
-        servicio.setNombreServicio(faker.commerce().productName());
-        servicio.setNombreServicio("Corte de pelo");
-        servicio.setPrecio(8000);
+        servicio.setNombreServicio(nombreGenerado);
+        servicio.setPrecio(precioGenerado);
 
         System.out.println(servicio);
 
         assertNotNull(servicio);
         assertNotNull(servicio.getNombreServicio());
-        assertEquals("Corte de pelo", servicio.getNombreServicio());
+        assertEquals(nombreGenerado, servicio.getNombreServicio());
+        assertEquals(precioGenerado, servicio.getPrecio());
     }
 
     @Test
     void actualizarServicio(){
         Servicio servicio = new Servicio();
-        servicio.setPrecio(8000);
+        servicio.setPrecio(faker.number().numberBetween(3000, 30000));
 
-        servicio.setPrecio(9500);
+        int nuevoPrecio = faker.number().numberBetween(3000, 30000);
+        servicio.setPrecio(nuevoPrecio);
 
         assertNotNull(servicio);
-        assertEquals(9500, servicio.getPrecio());
+        assertEquals(nuevoPrecio, servicio.getPrecio());
     }
 }

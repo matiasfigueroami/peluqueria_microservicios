@@ -9,29 +9,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GestionEmpleadoPrueba {
 
+    private final Faker faker = new Faker();
+
     @Test
     void registrarEmpleado(){
-        Faker faker = new Faker();
         Empleado empleado = new Empleado();
-
-        empleado.setPnombre(faker.name().firstName());
-        empleado.setPnombre("Carlos");
+        String nombreGenerado = faker.name().firstName();
+        empleado.setPnombre(nombreGenerado);
 
         System.out.println(empleado);
 
         assertNotNull(empleado);
         assertNotNull(empleado.getPnombre());
-        assertEquals("Carlos", empleado.getPnombre());
+        assertEquals(nombreGenerado, empleado.getPnombre());
     }
 
     @Test
     void actualizarEmpleado(){
         Empleado empleado = new Empleado();
-        empleado.setPnombre("Carlos");
+        empleado.setPnombre(faker.name().firstName());
 
-        empleado.setPnombre("Andrés");
+        String nuevoNombre = faker.name().firstName();
+        empleado.setPnombre(nuevoNombre);
 
         assertNotNull(empleado);
-        assertEquals("Andrés", empleado.getPnombre());
+        assertEquals(nuevoNombre, empleado.getPnombre());
     }
 }

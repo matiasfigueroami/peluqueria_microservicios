@@ -8,36 +8,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GestionAgendaCitaPrueba {
+
+    private final Faker faker = new Faker();
+
     @Test
     void registrarAgendaCita(){
-        //arange
-        Faker faker= new Faker();
         Cita cita = new Cita();
-        cita.setEstado(faker.educator().course());
-        cita.setEstado("activo");
+        String estadoGenerado = faker.options().option("pendiente", "activo", "completada");
+        cita.setEstado(estadoGenerado);
 
         System.out.println(cita);
 
         assertNotNull(cita);
-
-        assertNotNull(cita);
         assertNotNull(cita.getEstado());
-        assertEquals("activo",cita.getEstado());
-
-
+        assertEquals(estadoGenerado, cita.getEstado());
     }
 
     @Test
     void actualizarAgendaCita(){
         Cita cita = new Cita();
-        cita.setEstado("pendiente");
+        cita.setEstado(faker.options().option("pendiente", "activo"));
 
-        cita.setEstado("cancelado");
+        String nuevoEstado = faker.options().option("cancelado", "completada");
+        cita.setEstado(nuevoEstado);
 
         System.out.println(cita);
 
         assertNotNull(cita);
-        assertEquals("cancelado", cita.getEstado());
+        assertEquals(nuevoEstado, cita.getEstado());
     }
 
 }

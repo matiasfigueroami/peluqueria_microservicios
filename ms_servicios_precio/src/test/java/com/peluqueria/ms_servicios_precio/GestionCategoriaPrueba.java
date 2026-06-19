@@ -9,29 +9,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GestionCategoriaPrueba {
 
+    private final Faker faker = new Faker();
+
     @Test
     void registrarCategoria(){
-        Faker faker = new Faker();
         Categoria categoria = new Categoria();
-
-        categoria.setNombreCategoria(faker.commerce().department());
-        categoria.setNombreCategoria("Cabello");
+        String nombreGenerado = faker.commerce().department();
+        categoria.setNombreCategoria(nombreGenerado);
 
         System.out.println(categoria);
 
         assertNotNull(categoria);
         assertNotNull(categoria.getNombreCategoria());
-        assertEquals("Cabello", categoria.getNombreCategoria());
+        assertEquals(nombreGenerado, categoria.getNombreCategoria());
     }
 
     @Test
     void actualizarCategoria(){
         Categoria categoria = new Categoria();
-        categoria.setNombreCategoria("Cabello");
+        categoria.setNombreCategoria(faker.commerce().department());
 
-        categoria.setNombreCategoria("Uñas");
+        String nuevoNombre = faker.commerce().department();
+        categoria.setNombreCategoria(nuevoNombre);
 
         assertNotNull(categoria);
-        assertEquals("Uñas", categoria.getNombreCategoria());
+        assertEquals(nuevoNombre, categoria.getNombreCategoria());
     }
 }

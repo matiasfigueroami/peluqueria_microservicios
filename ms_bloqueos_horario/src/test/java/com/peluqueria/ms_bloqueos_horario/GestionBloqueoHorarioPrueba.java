@@ -9,29 +9,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GestionBloqueoHorarioPrueba {
 
+    private final Faker faker = new Faker();
+
     @Test
     void registrarBloqueoHorario(){
-        Faker faker = new Faker();
         BloqueoHorario bloqueo = new BloqueoHorario();
-
-        bloqueo.setMotivo(faker.lorem().sentence());
-        bloqueo.setMotivo("Vacaciones");
+        String motivoGenerado = faker.lorem().sentence();
+        bloqueo.setMotivo(motivoGenerado);
 
         System.out.println(bloqueo);
 
         assertNotNull(bloqueo);
         assertNotNull(bloqueo.getMotivo());
-        assertEquals("Vacaciones", bloqueo.getMotivo());
+        assertEquals(motivoGenerado, bloqueo.getMotivo());
     }
 
     @Test
     void actualizarBloqueoHorario(){
         BloqueoHorario bloqueo = new BloqueoHorario();
-        bloqueo.setMotivo("Vacaciones");
+        bloqueo.setMotivo(faker.lorem().sentence());
 
-        bloqueo.setMotivo("Licencia médica");
+        String nuevoMotivo = faker.lorem().sentence();
+        bloqueo.setMotivo(nuevoMotivo);
 
         assertNotNull(bloqueo);
-        assertEquals("Licencia médica", bloqueo.getMotivo());
+        assertEquals(nuevoMotivo, bloqueo.getMotivo());
     }
 }

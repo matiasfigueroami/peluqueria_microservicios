@@ -10,27 +10,25 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class GestionRolPrueba {
 
+    private final Faker faker = new Faker();
+
     @Test
     void registrarRol() {
-
-        Faker faker = new Faker();
         Rol rol = new Rol();
+        String nombreGenerado = faker.options().option("Dueño", "Administrador", "Recepcionista");
+        rol.setNombreRol(nombreGenerado);
 
-        rol.setNombreRol(faker.educator().course());
-        rol.setNombreRol("Dueño");
         System.out.println(rol);
 
         assertNotNull(rol);
         assertNotNull(rol.getNombreRol());
-        assertEquals("Dueño",rol.getNombreRol());
-
-
+        assertEquals(nombreGenerado, rol.getNombreRol());
     }
 
     @Test
     void eliminarRol() {
         Rol rol = new Rol();
-        rol.setNombreRol("Recepcionista");
+        rol.setNombreRol(faker.job().title());
 
         rol.setNombreRol(null);
 

@@ -9,29 +9,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GestionNotificacionPrueba {
 
+    private final Faker faker = new Faker();
+
     @Test
     void registrarNotificacion(){
-        Faker faker = new Faker();
         Notificacion notificacion = new Notificacion();
-
-        notificacion.setMensaje(faker.lorem().sentence());
-        notificacion.setMensaje("Su cita fue confirmada");
+        String mensajeGenerado = faker.lorem().sentence();
+        notificacion.setMensaje(mensajeGenerado);
 
         System.out.println(notificacion);
 
         assertNotNull(notificacion);
         assertNotNull(notificacion.getMensaje());
-        assertEquals("Su cita fue confirmada", notificacion.getMensaje());
+        assertEquals(mensajeGenerado, notificacion.getMensaje());
     }
 
     @Test
     void actualizarNotificacion(){
         Notificacion notificacion = new Notificacion();
-        notificacion.setMensaje("Su cita fue confirmada");
+        notificacion.setMensaje(faker.lorem().sentence());
 
-        notificacion.setMensaje("Su cita fue cancelada");
+        String nuevoMensaje = faker.lorem().sentence();
+        notificacion.setMensaje(nuevoMensaje);
 
         assertNotNull(notificacion);
-        assertEquals("Su cita fue cancelada", notificacion.getMensaje());
+        assertEquals(nuevoMensaje, notificacion.getMensaje());
     }
 }

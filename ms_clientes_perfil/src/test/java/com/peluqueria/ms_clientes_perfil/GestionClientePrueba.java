@@ -9,30 +9,34 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GestionClientePrueba {
 
+    private final Faker faker = new Faker();
+
     @Test
     void registrarCliente(){
-        Faker faker = new Faker();
         Cliente cliente = new Cliente();
+        String nombreGenerado = faker.name().firstName();
+        String telefonoGenerado = faker.phoneNumber().subscriberNumber(9);
 
-        cliente.setPrimerNombre(faker.name().firstName());
-        cliente.setPrimerNombre("Juan");
-        cliente.setTelefono("987654321");
+        cliente.setPrimerNombre(nombreGenerado);
+        cliente.setTelefono(telefonoGenerado);
 
         System.out.println(cliente);
 
         assertNotNull(cliente);
         assertNotNull(cliente.getPrimerNombre());
-        assertEquals("Juan", cliente.getPrimerNombre());
+        assertEquals(nombreGenerado, cliente.getPrimerNombre());
+        assertEquals(telefonoGenerado, cliente.getTelefono());
     }
 
     @Test
     void actualizarCliente(){
         Cliente cliente = new Cliente();
-        cliente.setTelefono("987654321");
+        cliente.setTelefono(faker.phoneNumber().subscriberNumber(9));
 
-        cliente.setTelefono("912345678");
+        String nuevoTelefono = faker.phoneNumber().subscriberNumber(9);
+        cliente.setTelefono(nuevoTelefono);
 
         assertNotNull(cliente);
-        assertEquals("912345678", cliente.getTelefono());
+        assertEquals(nuevoTelefono, cliente.getTelefono());
     }
 }

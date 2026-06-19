@@ -9,29 +9,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GestionEspecialidadPrueba {
 
+    private final Faker faker = new Faker();
+
     @Test
     void registrarEspecialidad(){
-        Faker faker = new Faker();
         Especialidad especialidad = new Especialidad();
-
-        especialidad.setNombre(faker.job().field());
-        especialidad.setNombre("Coloración");
+        String nombreGenerado = faker.job().field();
+        especialidad.setNombre(nombreGenerado);
 
         System.out.println(especialidad);
 
         assertNotNull(especialidad);
         assertNotNull(especialidad.getNombre());
-        assertEquals("Coloración", especialidad.getNombre());
+        assertEquals(nombreGenerado, especialidad.getNombre());
     }
 
     @Test
     void actualizarEspecialidad(){
         Especialidad especialidad = new Especialidad();
-        especialidad.setNombre("Coloración");
+        especialidad.setNombre(faker.job().field());
 
-        especialidad.setNombre("Corte");
+        String nuevoNombre = faker.job().field();
+        especialidad.setNombre(nuevoNombre);
 
         assertNotNull(especialidad);
-        assertEquals("Corte", especialidad.getNombre());
+        assertEquals(nuevoNombre, especialidad.getNombre());
     }
 }
