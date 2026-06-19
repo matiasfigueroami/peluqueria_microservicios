@@ -4,7 +4,6 @@ import com.peluqueria.ms_agenda_cita.model.Cita;
 import com.peluqueria.ms_agenda_cita.repository.CitaRepository;
 import com.peluqueria.ms_agenda_cita.service.CitaService;
 import net.datafaker.Faker;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,18 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.never;
-@ExtendWith(MockitoExtension.class)
 
+@ExtendWith(MockitoExtension.class)
 public class MsAgendaCitaPrueba {
 
     @Mock
@@ -36,12 +30,35 @@ public class MsAgendaCitaPrueba {
 
     private Cita cita;
 
+    // Instanciamos Faker
+    private Faker faker;
+
     @BeforeEach
     void setUp() {
-        // Configuramos una cita válida para usar en las pruebas
-        cita = new Cita(1, 100, 200, 300,
-                LocalDateTime.of(2026, 6, 15, 10, 0),
-                "PROGRAMADA");
+        faker = new Faker();
+
+        // Generamos datos dinámicos y realistas con DataFaker
+        Integer idCita = faker.number().numberBetween(1, 1000);
+        Integer idCliente = faker.number().numberBetween(100, 999);
+        Integer idEmpleado = faker.number().numberBetween(10, 50);
+        Integer idServicio = faker.number().numberBetween(1, 20);
+
+        // Generamos una fecha en el futuro (entre 1 y 30 días adelante),
+        // en un horario comercial aleatorio (entre las 9:00 y las 18:00 hrs)
+        LocalDateTime fechaHoraCita = LocalDateTime.now()
+                .plusDays(faker.number().numberBetween(1, 30))
+                .withHour(faker.number().numberBetween(9, 18))
+                .withMinute(0).withSecond(0).withNano(0);
+
+        // Configuramos la cita válida para usar en las pruebas con los datos fakes
+        cita = new Cita(
+                idCita,
+                idCliente,
+                idEmpleado,
+                idServicio,
+                fechaHoraCita,
+                "PROGRAMADA"
+        );
     }
 
     // ==========================================
@@ -60,11 +77,13 @@ public class MsAgendaCitaPrueba {
 
         Cita resultado = citaService.saveCita(cita);
 
-        Assertions.assertNotNull(resultado);
+        assertNotNull(resultado);
         assertEquals("PROGRAMADA", resultado.getEstado());
+        // Verificamos que los datos generados por Faker se mantengan en el resultado
+        assertEquals(cita.getIdCliente(), resultado.getIdCliente());
+
         verify(citaRepository, times(1)).save(cita);
     }
-
 
     // ==========================================
     // CP-04: Conflicto de horario en cita

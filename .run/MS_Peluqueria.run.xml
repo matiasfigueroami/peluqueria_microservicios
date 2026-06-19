@@ -1,6 +1,15 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="MS_Peluqueria" type="CompoundRunConfigurationType">
     <toRun name="MS_Agenda_Cita" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MS_Autenticacion_Usuario" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MS_Bloquos_Horario" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MS_Clientes_Perfil" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MS_Especialidades_Catalogo" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MS_Notificacion" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MS_Pago_Boleta" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MS_Peluqueros_Staff" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MS_Resenas_Feedback" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MS_Servicios_Precio" type="SpringBootApplicationConfigurationType" />
     <method v="2" />
   </configuration>
 </component>
