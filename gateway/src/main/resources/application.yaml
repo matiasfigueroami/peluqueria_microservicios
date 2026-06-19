@@ -28,3 +28,49 @@ spring:
             uri: http://localhost:8089
             predicates:
               - Path=/api/v1/bloqueoHorarios/**
+
+          - id: citas
+            uri: http://localhost:8083
+            predicates:
+              - Path=/api/v1/citas/**
+
+          - id: rol
+            uri: http://localhost:8097
+            predicates:
+              - Path=/api/v1/roles/**
+
+          - id: usuario
+            uri: http://localhost:8097
+            predicates:
+              - Path=/api/v1/usuarios/**
+
+          - id: especialidad
+            uri: http://localhost:8087
+            predicates:
+              - Path=/api/v1/especialidades/**
+
+          - id: notificacion
+            uri: http://localhost:8086
+            predicates:
+              - Path=/api/v1/notificaciones/**
+
+          - id: pago
+            uri: http://localhost:8090
+            predicates:
+              - Path=/api/v1/pagos/**
+
+          - id: empleado
+            uri: http://localhost:8085
+            predicates:
+              - Path=/api/v1/empleados/**
+
+          - id: categoria
+            uri: http://localhost:8088
+            predicates:
+              - Path=/api/v1/categorias/**
+
+          - id: servicio
+            uri: http://localhost:8088
+            predicates:
+              - Path=/api/v1/servicios/**
+
