@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface CitaRepository extends JpaRepository<Cita, Integer> {
 
-    // Citas solapadas del mismo empleado
+
     @Query("SELECT c FROM Cita c WHERE c.idEmpleado = :idEmpleado " +
             "AND c.fechaHoraInicio = :fechaHoraInicio " + "AND c.estado != 'Cancelada'")
     List<Cita> findCitasSolapadas(

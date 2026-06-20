@@ -30,17 +30,13 @@ public class CitaController {
     private CitaService citaService;
 
     @Operation(summary = "Obtiene todos los detalles de las citas")
-    @GetMapping //trae todas las citas
-    //public EntityModel<Cita> getCitas(){
-    //    return citaService.getCitas();
-    //}
-
+    @GetMapping
     public ResponseEntity<List<Cita>> getCitas() {
         return new ResponseEntity<>(citaService.getCitas(), HttpStatus.OK);
     }
 
     @Operation(summary = "Obtiene todos los detalles de una cita mediante su ID")
-    @GetMapping("/{id}")//solo trae la cita con el id
+    @GetMapping("/{id}")
     public EntityModel<Cita> getCita(@PathVariable Integer id){
         Cita cita = citaService.getCita(id).orElseThrow();
         EntityModel<Cita> model = EntityModel.of(cita);
@@ -64,14 +60,7 @@ public class CitaController {
         return model;
     }
 
-    //public ResponseEntity<Cita> getCita(@PathVariable Integer id) {
-    //    Optional<Cita> citaOpt = citaService.getCita(id);
-    //    if (citaOpt.isPresent()) {
-    //        return new ResponseEntity<>(citaOpt.get(), HttpStatus.OK);
-    //    } else {
-    //        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    //    }
-    //}
+
 
     @Operation(summary = "Agrega una nueva cita")
     @PostMapping
@@ -81,7 +70,7 @@ public class CitaController {
     }
 
     @Operation(summary = "Edita algunos datos de cita existente mediante su ID")
-    @PutMapping("/{id}")//para actualizar la cita solo se pone el body , raw y json
+    @PutMapping("/{id}")
     public ResponseEntity<Cita> updateCita(@PathVariable Integer id, @Valid @RequestBody Cita cita) {
         Optional<Cita> citaExistente = citaService.getCita(id);
         if (citaExistente.isPresent()) {
@@ -91,7 +80,7 @@ public class CitaController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    //eliminacion con el id
+
     @Operation(summary = "Elimina una cita existente mediante su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCita(@PathVariable Integer id) {
@@ -103,7 +92,7 @@ public class CitaController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    //muestra datos
+
     @Operation(summary = "Obtiene los detalles de una cita y el cliente que lo agendo")
     @GetMapping("/clientes")
     public ResponseEntity<CitaClienteDTO> getCitaConClienteDTO() {
