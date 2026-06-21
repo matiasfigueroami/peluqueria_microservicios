@@ -6,12 +6,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.hateoas.Link;
+
 
 import java.util.List;
 import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/v1/roles")
@@ -27,14 +32,36 @@ public class RolController {
         return new ResponseEntity<>(rolService.getRoles(), HttpStatus.OK);
     }
 
+
     @Operation(summary = "Obtiene todos los detalles de un rol mediante su ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Rol> getRol(@PathVariable Integer id) {
+    public ResponseEntity<EntityModel<Rol>> getRol(@PathVariable Integer id) {
         Optional<Rol> rolOpt = rolService.getRol(id);
+
         if (rolOpt.isPresent()) {
-            return new ResponseEntity<>(rolOpt.get(), HttpStatus.OK);
+            Rol rol = rolOpt.get();
+            EntityModel<Rol> model = EntityModel.of(rol);
+
+            model.add(
+                    linkTo(
+                            methodOn(RolController.class).getRol(id)
+                    ).withSelfRel()
+            );
+
+            model.add(
+                    Link.of("http://localhost:8083/api/v1/roles/" + id, "eliminar")
+            );
+
+            model.add(
+                    linkTo(
+                            methodOn(RolController.class).getRoles()
+                    ).withRel("todos-los-roles")
+            );
+            return ResponseEntity.ok(model);
+
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 

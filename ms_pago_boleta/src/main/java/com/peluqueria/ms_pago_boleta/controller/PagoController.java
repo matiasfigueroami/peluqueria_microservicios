@@ -7,10 +7,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import org.springframework.hateoas.Link;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,11 +33,36 @@ public class PagoController {
 
     @Operation(summary = "Obtiene todos los detalles de un pago mediante su ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Pago> getPago(@PathVariable Integer id) {
+    public ResponseEntity<EntityModel<Pago>> getPago(@PathVariable Integer id) {
         Optional<Pago> pagoOpt = pagoService.getPago(id);
+
         if (pagoOpt.isPresent()) {
-            return new ResponseEntity<>(pagoOpt.get(), HttpStatus.OK);
+            Pago pago = pagoOpt.get();
+            EntityModel<Pago> model = EntityModel.of(pago);
+
+            model.add(
+                    linkTo(
+                            methodOn(PagoController.class).getPago(id)
+                    ).withSelfRel()
+            );
+
+
+            model.add(
+                    Link.of("http://localhost:8083/api/v1/pagos/" + id, "eliminar")
+            );
+
+
+            model.add(
+                    linkTo(
+                            methodOn(PagoController.class).getPagos()
+                    ).withRel("todos-los-pagos")
+            );
+
+
+            return new ResponseEntity<>(model, HttpStatus.OK);
+
         } else {
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

@@ -37,27 +37,29 @@ public class CitaController {
 
     @Operation(summary = "Obtiene todos los detalles de una cita mediante su ID")
     @GetMapping("/{id}")
-    public EntityModel<Cita> getCita(@PathVariable Integer id){
-        Cita cita = citaService.getCita(id).orElseThrow();
-        EntityModel<Cita> model = EntityModel.of(cita);
+    public ResponseEntity<EntityModel<Cita>> getCita(@PathVariable Integer id) {
+        Optional<Cita> citaOpt = citaService.getCita(id);
+        if (citaOpt.isPresent()) {
+            Cita cita = citaOpt.get();
+            EntityModel<Cita> model = EntityModel.of(cita);
+            model.add(
+                    linkTo(
+                            methodOn(CitaController.class).getCita(id)
+                    ).withSelfRel()
+            );
+            model.add(
+                    Link.of("http://localhost:8083/api/v1/citas/" + id, "eliminar")
+            );
+            model.add(
+                    linkTo(
+                            methodOn(CitaController.class).getCitas()
+                    ).withRel("todas-las-citas")
+            );
+            return ResponseEntity.ok(model);
 
-        model.add(
-                linkTo(
-                       methodOn(CitaController.class).getCita(id)
-                ).withSelfRel()
-        );
-
-        model.add(
-                Link.of("http//localhost:8083/api/v1/citas/" + id, "eliminar")
-        );
-
-        model.add(
-            linkTo(
-                methodOn(CitaController.class)
-                        .getCitas()
-        ).withRel("todas-las-citas")
-        );
-        return model;
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 

@@ -6,13 +6,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import org.springframework.hateoas.Link;
 @RestController
 @RequestMapping("/api/v1/especialidades")
 @Tag(name = "Especialidades", description = "Operaciones relacionadas con las especialidades de MS Peluqueria")
@@ -29,11 +32,33 @@ public class EspecialidadController {
 
     @Operation(summary = "Obtiene todos los detalles de una especialidad")
     @GetMapping("/{id}")
-    public ResponseEntity<Especialidad> getEspecialidad(@PathVariable Integer id) {
+    public ResponseEntity<EntityModel<Especialidad>> getEspecialidad(@PathVariable Integer id) {
         Optional<Especialidad> especialidadOpt = especialidadService.getEspecialidad(id);
+
         if (especialidadOpt.isPresent()) {
-            return new ResponseEntity<>(especialidadOpt.get(), HttpStatus.OK);
+            Especialidad especialidad = especialidadOpt.get();
+            EntityModel<Especialidad> model = EntityModel.of(especialidad);
+
+            // Enlace a sí mismo (self)
+            model.add(
+                    linkTo(
+                            methodOn(EspecialidadController.class).getEspecialidad(id)
+                    ).withSelfRel()
+            );
+            model.add(
+                    Link.of("http://localhost:8083/api/v1/especialidades/" + id, "eliminar")
+            );
+
+            model.add(
+                    linkTo(
+                            methodOn(EspecialidadController.class).getEspecialidades()
+                    ).withRel("todas-las-especialidades")
+            );
+
+            return new ResponseEntity<>(model, HttpStatus.OK);
+
         } else {
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

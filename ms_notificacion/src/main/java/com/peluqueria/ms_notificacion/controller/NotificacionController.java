@@ -7,13 +7,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import org.springframework.hateoas.Link;
 @RestController
 @RequestMapping("/api/v1/notificaciones")
 @Tag(name = "Notificaciones", description = "Operaciones relacionadas con las notificaciones de MS Peluqueria")
@@ -30,11 +33,37 @@ public class NotificacionController {
 
     @Operation(summary = "Obtiene todos los detalles de una notificacion mediante su ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Notificacion> getNotificacion(@PathVariable Integer id) {
+    public ResponseEntity<EntityModel<Notificacion>> getNotificacion(@PathVariable Integer id) {
         Optional<Notificacion> notificacionOpt = notificacionService.getNotificacion(id);
+
         if (notificacionOpt.isPresent()) {
-            return new ResponseEntity<>(notificacionOpt.get(), HttpStatus.OK);
+            Notificacion notificacion = notificacionOpt.get();
+            EntityModel<Notificacion> model = EntityModel.of(notificacion);
+
+            // Enlace a sí mismo (self)
+            model.add(
+                    linkTo(
+                            methodOn(NotificacionController.class).getNotificacion(id)
+                    ).withSelfRel()
+            );
+
+            // Enlace para eliminar (ajustado al endpoint de notificaciones)
+            model.add(
+                    Link.of("http://localhost:8083/api/v1/notificaciones/" + id, "eliminar")
+            );
+
+            // Enlace hacia la lista de todas las notificaciones
+            model.add(
+                    linkTo(
+                            methodOn(NotificacionController.class).getNotificaciones()
+                    ).withRel("todas-las-notificaciones")
+            );
+
+            // Retornamos el modelo HATEOAS con estado 200 OK
+            return new ResponseEntity<>(model, HttpStatus.OK);
+
         } else {
+            // Retornamos 404 si la notificación no existe
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

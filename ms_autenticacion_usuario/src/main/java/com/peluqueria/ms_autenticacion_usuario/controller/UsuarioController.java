@@ -6,13 +6,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import org.springframework.hateoas.Link;
 @RestController
 @RequestMapping("/api/v1/usuarios")
 @Tag(name = "Usuarios", description = "Operaciones relacionadas con los usuarios de MS Peluqueria")
@@ -29,11 +32,37 @@ public class UsuarioController {
 
     @Operation(summary = "Obtiene todos los detalles de un usuario")
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> getUsuario(@PathVariable Integer id) {
+    public ResponseEntity<EntityModel<Usuario>> getUsuario(@PathVariable Integer id) {
         Optional<Usuario> usuarioOpt = usuarioService.getUsuario(id);
+
         if (usuarioOpt.isPresent()) {
-            return new ResponseEntity<>(usuarioOpt.get(), HttpStatus.OK);
+            Usuario usuario = usuarioOpt.get();
+            EntityModel<Usuario> model = EntityModel.of(usuario);
+
+            // Enlace a sí mismo (self)
+            model.add(
+                    linkTo(
+                            methodOn(UsuarioController.class).getUsuario(id)
+                    ).withSelfRel()
+            );
+
+            // Enlace para eliminar (ajustado al endpoint de usuarios)
+            model.add(
+                    Link.of("http://localhost:8083/api/v1/usuarios/" + id, "eliminar")
+            );
+
+            // Enlace hacia la lista de todos los usuarios
+            model.add(
+                    linkTo(
+                            methodOn(UsuarioController.class).getUsuarios()
+                    ).withRel("todos-los-usuarios")
+            );
+
+            // Retornamos el modelo con los enlaces y el estado 200 OK
+            return new ResponseEntity<>(model, HttpStatus.OK);
+
         } else {
+            // Retornamos 404 si el usuario no existe
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

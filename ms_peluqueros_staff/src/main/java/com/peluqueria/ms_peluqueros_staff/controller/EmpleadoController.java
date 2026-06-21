@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import org.springframework.hateoas.Link;
 @RestController
 @RequestMapping("/api/v1/empleados")
 @Tag(name = "Empleados", description = "Operaciones relacionadas con los empleados de MS Peluqueria")
@@ -33,12 +37,37 @@ public class EmpleadoController {
     // 200 OK o 404 NOT FOUND
     @Operation(summary = "Obtiene todos los detalles de un empleado mediante su ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Empleado> getEmpleado(@PathVariable Integer id) {
+    public ResponseEntity<EntityModel<Empleado>> getEmpleado(@PathVariable Integer id) {
         Optional<Empleado> empleadoOpt = empleadoService.getEmpleado(id);
 
         if (empleadoOpt.isPresent()) {
-            return ResponseEntity.ok(empleadoOpt.get());
+            Empleado empleado = empleadoOpt.get();
+            EntityModel<Empleado> model = EntityModel.of(empleado);
+
+            // Enlace a sí mismo (self)
+            model.add(
+                    linkTo(
+                            methodOn(EmpleadoController.class).getEmpleado(id)
+                    ).withSelfRel()
+            );
+
+            // Enlace para eliminar (ajustado al endpoint de empleados)
+            model.add(
+                    Link.of("http://localhost:8083/api/v1/empleados/" + id, "eliminar")
+            );
+
+            // Enlace hacia la lista de todos los empleados
+            model.add(
+                    linkTo(
+                            methodOn(EmpleadoController.class).getEmpleados()
+                    ).withRel("todos-los-empleados")
+            );
+
+            // Retornamos un 200 OK pasando el modelo con los enlaces hipermedia
+            return ResponseEntity.ok(model);
+
         } else {
+            // Retornamos un 404 Not Found con el cuerpo vacío si no existe
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
